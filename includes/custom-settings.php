@@ -1,6 +1,16 @@
 <?php
+/**
+ * Country List Array.
+ *
+ * @package Restrict_Country
+ */
 
-add_action( 'admin_menu', 'block_country_admin_menu' );
+/**
+ * Exit if accessed directly
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  *  Block Country Admin Menu.
@@ -12,46 +22,60 @@ function block_country_admin_menu() {
 		'Block Country',
 		'manage_options',
 		'block-country',
-		'callback_menu_func',
-		'dashicons-admin-users',
+		'block_country_menu_callback',
+		'dashicons-admin-site-alt',
 		100
 	);
 }
 
-add_action( 'admin_init', 'submit_data', 10 );
+add_action( 'admin_menu', 'block_country_admin_menu' );
 
 /**
- * Function for Submit data.
+ * Function for Submit Form data.
  */
 function submit_data() {
 
+	// Get Country From Form.
 	$country = isset( $_POST['country'] ) ? $_POST['country'] : '';
-	$id      = isset( $_POST['page_id'] ) ? $_POST['page_id'] : '';
-	$save    = isset( $_POST['save'] ) ? $_POST['save'] : '';
+
+	// Get Page ID From Form.
+	$id   = isset( $_POST['page_id'] ) ? $_POST['page_id'] : '';
+	$save = isset( $_POST['save'] ) ? $_POST['save'] : '';
 
 	if ( empty( $save ) ) {
 		return;
 	}
 
+	// Add or Update data to database.
 	update_option( 'country', $country );
 	update_option( 'page_id', $id );
+
+	// Display Admin Notice.
 	add_action( 'admin_notices', 'success_notice' );
 
 }
 
-
+add_action( 'admin_init', 'submit_data', 10 );
 
 /**
- * @param user_country_code $user_country_code Gets Stored country Code.
+ * Function used to List All Country.
+ *
+ * @param user_country_code $user_country_code fetch Stored country Code from database.
  * Function used to List All Country.
  */
 function countries_dropdown( $user_country_code = '' ) {
+
 	$option = '';
+
 	foreach ( $GLOBALS['countries_list'] as $key => $value ) {
+
 		$selected = ( ! empty( $user_country_code ) && in_array( $value['code'], $user_country_code ) ? 'selected' : '' );
 		$option  .= ' <option value="' . $value['code'] . '"' . $selected . '>' . $value['name'] . '</option>' . "\n";
+
 	}
+
 	return $option;
+
 }
 
 /**
@@ -61,12 +85,12 @@ function custom_scripts_loader() {
 
 	wp_enqueue_style(
 		'style',
-		trailingslashit( MY_PLUGIN_URL ) . 'assets/css/style.css',
+		trailingslashit( RCA_URL ) . 'assets/css/style.css',
 	);
 
 	wp_enqueue_script(
 		'custom-js',
-		trailingslashit( MY_PLUGIN_URL ) . 'assets/js/multiselect.js',
+		trailingslashit( RCA_URL ) . 'assets/js/multiselect.js',
 	);
 }
 add_action( 'admin_enqueue_scripts', 'custom_scripts_loader' );
@@ -74,7 +98,7 @@ add_action( 'admin_enqueue_scripts', 'custom_scripts_loader' );
 /**
  * Callback Function Of Custom Admin Menu.
  */
-function callback_menu_func() {
+function block_country_menu_callback() {
 	echo '<dic class="warp"><h1>Select Country to Block Access.</h1><p></p></div>';
 	?>
 	<form method="post" action="" id='select-country'>
@@ -86,13 +110,18 @@ function callback_menu_func() {
 					</th>
 					<td>
 						<select id="country" name="country[]" multiple >
+
 							<?php
+							// listing all Contries in the select box function.
 							$country_code      = get_option( 'country' );
 							$user_country_code = $country_code;
+
+							// Calling countries_dropdown Function.
 							echo countries_dropdown( $user_country_code );
 							?>
+
 						</select>
-						<p class="description" id="tagline-description"> <?php esc_html_e( 'Select country which you want to block. ', 'stop-war' ); ?> </p>
+						<p class="description" id="tagline-description"> <?php esc_html_e( 'Select country which you want to block. ', 'restrict-country' ); ?> </p>
 					</td>
 				</tr>
 				<tr>
@@ -122,7 +151,7 @@ function callback_menu_func() {
 							?>
 
 						</select>
-						<p class="description" id="tagline-description"> <?php esc_html_e( 'Select Page Where you want to redirect Blocked Country. ', 'stop-war' ); ?> </p>
+						<p class="description" id="tagline-description"> <?php esc_html_e( 'Select Page Where you want to redirect Blocked Country. ', 'restrict-country' ); ?> </p>
 					</td>
 				</tr>
 				<input type="hidden" name="page" value="block-country">

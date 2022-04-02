@@ -1,7 +1,19 @@
 <?php
+/**
+ * Country List Array.
+ *
+ * @package Restrict_Country
+ */
 
 /**
- * All Country list.
+ * Exit if accessed directly
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * All Country's List with ISO code.
  */
 $countries_list = array(
 
@@ -1014,4 +1026,3 @@ $countries_list = array(
 		'code' => 'ZW',
 	),
 );
-
