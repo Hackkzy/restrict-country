@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: Restrict Country
+ * Plugin Name: Restrict Country Access
  * Plugin URI:  https://biliplugins.com/
- * Description: Resrict WordPress site access by Country.
+ * Description: Resrict WordPress site from specific Countries.
  * Version:     1.0.0
  * Author:      Bili Plugins
  * Text Domain: restrict-country
- * Author URI:  https://wordpress-plugins.com/
+ * Author URI:  https://bhargavb.com/
  *
  * @package      Restrict_Country
  */
@@ -16,6 +16,12 @@
  *
  * @package    Restrict_Country
  */
+if ( ! defined( 'RCA_VERSION' ) ) {
+	/**
+	 * The version of the plugin.
+	 */
+	define( 'RCA_VERSION', '1.0.0' );
+}
 
 if ( ! defined( 'RCA_PATH' ) ) {
 	/**
