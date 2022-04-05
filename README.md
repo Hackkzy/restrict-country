@@ -24,9 +24,9 @@ This plugin will fulfill the requirement of Restricting WordPress site in select
 2. Activate the plugin through the "Plugins" menu in WordPress.
 
 ## Screenshots ##
-### 1. Option to set Country which you want to restrict ###
+### 1. Option to set Country which you want to restrict. ###
 ![alt text](screenshot-1.png "Option to set Country which you want to restrict")
-### 2. Selected Country will be Restricted screenshot-2.png. ###
+### 2. Selected Country will be Restricted. ###
 ![alt text](screenshot-2.png "Selected Country will be Restricted")
 
 ## Changelog ##
