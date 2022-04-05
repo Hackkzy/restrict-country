@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function block_country() {
 
 	// Get IP Address of user.
-	$ip = isset( $_SERVER['REMOTE_ADDR'] );
+	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP ) : '';
 
 	// API Used to Locate Country based on IP address.
 	$query = 'http://ip-api.com/json/' . $ip;
