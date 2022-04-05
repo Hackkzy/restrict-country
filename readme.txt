@@ -1,5 +1,5 @@
 === Restrict Country ===
-Contributors: bhargavbhandari90
+Contributors: bhargavbhandari90, hackkzy404
 Tags: biliplugins, blockcountry, block country
 Requires at least: 4.0
 Tested up to: 5.9.2
@@ -22,6 +22,10 @@ This plugin will fulfill the requirement of Restricting WordPress site in select
 == Installation ==
 1. Upload "restrict-country" to the "/wp-content/plugins/" directory usong FTP or upload plugin zip using upload button.
 2. Activate the plugin through the "Plugins" menu in WordPress.
+
+== Screenshots ==
+1. Option to set Country which you want to restrict screenshot-1.png.
+2. Selected Country will be Restricted screenshot-2.png.
 
 == Changelog ==
 = 1.0.0 =
