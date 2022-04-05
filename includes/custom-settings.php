@@ -35,15 +35,23 @@ add_action( 'admin_menu', 'block_country_admin_menu' );
  */
 function submit_data() {
 
-	// Get Country From Form.
-	$country = filter_input( INPUT_POST, 'country', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		// Get Country From Form.
+		$country = filter_input( INPUT_POST, 'country', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
-	// Get Page ID From Form.
-	$page_id = filter_input( INPUT_POST, 'page_id', FILTER_SANITIZE_NUMBER_INT );
-	$save    = filter_input( INPUT_POST, 'save', FILTER_SANITIZE_NUMBER_INT );
+		// Get Page ID From Form.
+		$page_id = filter_input( INPUT_POST, 'page_id', FILTER_SANITIZE_NUMBER_INT );
+		$save    = filter_input( INPUT_POST, 'save', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $save ) ) {
 		return;
+	}
+
+	// Nonce Verification.
+	if ( ! isset( $_POST['rca_nonce'] )
+		|| ! wp_verify_nonce( $_POST['rca_nonce'], 'rca_nonce_action' )
+	) {
+		echo esc_html__( 'Invalid Submission', 'restrict-country' );
+		die;
 	}
 
 	// Add or Update data to database.
@@ -98,7 +106,8 @@ function block_country_custom_scripts_loader() {
 		'rca-custom-script',
 		trailingslashit( RCA_URL ) . 'assets/js/multiselect.js',
 		array(),
-		RCA_VERSION
+		RCA_VERSION,
+		false
 	);
 }
 add_action( 'admin_enqueue_scripts', 'block_country_custom_scripts_loader' );
@@ -146,8 +155,8 @@ function block_country_menu_callback() {
 
 							<?php
 							// Query for listing all pages in the select box loop.
-							$my_wp_query       = new WP_Query();
-							$all_wp_pages      = $my_wp_query->query(
+							$my_wp_query  = new WP_Query();
+							$all_wp_pages = $my_wp_query->query(
 								array(
 									'post_type'      => 'page',
 									'posts_per_page' => 999,
@@ -179,11 +188,12 @@ function block_country_menu_callback() {
 				</tr>
 				<input type="hidden" name="page" value="block-country">
 				<input type="hidden" name="save" value="1">
+				<?php wp_nonce_field( 'rca_nonce_action', 'rca_nonce' ); ?>
 			</tbody>
 		</table>
 		<p class="submit">
 			<input id="submitbtn" class="button button-primary" type="submit" />
-		</p>
+		</p>	
 	</form>
 	<script>jQuery('#country').multiselect({columns: 1,placeholder: 'Select Country'});</script>
 	<?php
