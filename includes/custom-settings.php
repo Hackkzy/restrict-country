@@ -119,7 +119,7 @@ function block_country_menu_callback() {
 
 	echo sprintf(
 		'<dic class="warp"><h1>%s</h1><p></p></div>',
-		esc_html__( 'Select Country to Block Access.', 'restrict-country' )
+		esc_html__( 'Resterict Countries', 'restrict-country' )
 	);
 
 	?>
