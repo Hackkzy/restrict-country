@@ -18,10 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 function block_country_admin_menu() {
 
 	add_menu_page(
-		esc_html__( 'Block Country', 'restrict-country' ),
-		esc_html__( 'Block Country', 'restrict-country' ),
+		esc_html__( 'Restrict Country', 'restrict-country' ),
+		esc_html__( 'Restrict Country', 'restrict-country' ),
 		'manage_options',
-		'block-country',
+		'restrict-country',
 		'block_country_menu_callback',
 		'dashicons-admin-site-alt',
 		100

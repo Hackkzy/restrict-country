@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name: Restrict Country Access
- * Plugin URI:  https://biliplugins.com/
+ * Plugin URI:  https://bhargavb.com/
  * Description: Resrict WordPress site from specific Countries.
  * Version:     1.0.0
  * Author:      Bili Plugins
  * Text Domain: restrict-country
- * Author URI:  https://bhargavb.com/
+ * Author URI:  https://biliplugins.com/
  *
  * @package      Restrict_Country
  */
@@ -36,6 +36,32 @@ if ( ! defined( 'RCA_URL' ) ) {
 	 */
 	define( 'RCA_URL', plugin_dir_url( __FILE__ ) );
 }
+if ( ! defined( 'RCA_BASE_NAME' ) ) {
+	/**
+	 * The url to the plugin directory.
+	 */
+	define( 'RCA_BASE_NAME', plugin_basename( __FILE__ ) );
+}
+
+/**
+ * Setting link for plugin.
+ *
+ * @param  array $links Array of plugin setting link.
+ * @return array
+ */
+function rca_setting_page_link( $links ) {
+
+	$settings_link = sprintf(
+		'<a href="%1$s">%2$s</a>',
+		esc_url( admin_url( 'admin.php?page=restrict-country' ) ),
+		esc_html__( 'Settings', 'restrict-country' )
+	);
+
+	array_unshift( $links, $settings_link );
+	return $links;
+}
+
+add_filter( 'plugin_action_links_' . RCA_BASE_NAME, 'rca_setting_page_link' );
 
 // Include Function Files.
 require RCA_PATH . '/includes/custom-settings.php';
