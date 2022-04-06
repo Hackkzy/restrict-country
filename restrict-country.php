@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Restrict Country Access
  * Plugin URI:  https://bhargavb.com/
- * Description: Resrict WordPress site from specific Countries.
+ * Description: Resrict your site from specific Countries.
  * Version:     1.0.0
  * Author:      Bili Plugins
  * Text Domain: restrict-country
