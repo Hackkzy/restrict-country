@@ -119,7 +119,7 @@ function rca_block_country_menu_callback() {
 
 	echo sprintf(
 		'<dic class="warp"><h1>%s</h1><p></p></div>',
-		esc_html__( 'Resterict Countries', 'restrict-country' )
+		esc_html__( 'Restrict Countries', 'restrict-country' )
 	);
 
 	?>
@@ -131,7 +131,7 @@ function rca_block_country_menu_callback() {
 						<label for="country"> <?php esc_html_e( 'Select Country', 'restrict-country' ); ?> </label>
 					</th>
 					<td>
-						<select id="country" name="rca_country[]" multiple >
+						<select id="country" name="rca_country[]" multiple>
 
 							<?php
 							// listing all Contries in the select box function.
