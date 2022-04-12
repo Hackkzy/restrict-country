@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Function Which Restrict Countries.
  */
-function block_country() {
+function rca_block_country() {
 
 	// Get IP Address of user.
 	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP ) : '';
@@ -61,10 +61,10 @@ function block_country() {
 	if ( ! empty( $status ) && 'success' == $status ) {
 
 		// Get Selected Country of Plugin From database.
-		$selected_country = ! empty( get_option( 'country' ) ) ? get_option( 'country' ) : array();
+		$selected_country = ! empty( get_option( 'rca_country' ) ) ? get_option( 'rca_country' ) : array();
 
 		// Get Selected Page id of Plugin From database.
-		$page_id = get_option( 'page_id' );
+		$page_id = get_option( 'rca_page_id' );
 
 		// Current page ID.
 		$current_page_id = get_the_ID();
@@ -95,4 +95,4 @@ function block_country() {
 	}
 }
 
-add_action( 'template_redirect', 'block_country', 9999 );
+add_action( 'template_redirect', 'rca_block_country', 9999 );
