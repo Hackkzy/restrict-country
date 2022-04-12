@@ -15,31 +15,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  *  Block Country Admin Menu.
  */
-function block_country_admin_menu() {
+function rca_block_country_admin_menu() {
 
 	add_menu_page(
 		esc_html__( 'Restrict Country', 'restrict-country' ),
 		esc_html__( 'Restrict Country', 'restrict-country' ),
 		'manage_options',
-		'restrict-country',
-		'block_country_menu_callback',
+		'rca-restrict-country',
+		'rca_block_country_menu_callback',
 		'dashicons-admin-site-alt',
 		100
 	);
 }
 
-add_action( 'admin_menu', 'block_country_admin_menu' );
+add_action( 'admin_menu', 'rca_block_country_admin_menu' );
 
 /**
  * Function for Submit Form data.
  */
-function submit_data() {
+function rca_submit_data() {
 
 		// Get Country From Form.
-		$country = filter_input( INPUT_POST, 'country', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		$country = filter_input( INPUT_POST, 'rca_country', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 		// Get Page ID From Form.
-		$page_id = filter_input( INPUT_POST, 'page_id', FILTER_SANITIZE_NUMBER_INT );
+		$page_id = filter_input( INPUT_POST, 'rca_page_id', FILTER_SANITIZE_NUMBER_INT );
 		$save    = filter_input( INPUT_POST, 'save', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $save ) ) {
@@ -55,15 +55,15 @@ function submit_data() {
 	}
 
 	// Add or Update data to database.
-	update_option( 'country', $country );
-	update_option( 'page_id', $page_id );
+	update_option( 'rca_country', $country );
+	update_option( 'rca_page_id', $page_id );
 
 	// Display Admin Notice.
-	add_action( 'admin_notices', 'restrict_country_success_notice' );
+	add_action( 'admin_notices', 'rca_block_country_success_notice' );
 
 }
 
-add_action( 'admin_init', 'submit_data', 10 );
+add_action( 'admin_init', 'rca_submit_data', 10 );
 
 /**
  * Function used to List All Country.
@@ -71,7 +71,7 @@ add_action( 'admin_init', 'submit_data', 10 );
  * @param  array $user_country_code Selected country Code from database.
  * @return array                    Countries dropdown
  */
-function countries_dropdown( $user_country_code = array() ) {
+function rca_countries_dropdown( $user_country_code = array() ) {
 
 	$option = '';
 
@@ -93,29 +93,29 @@ function countries_dropdown( $user_country_code = array() ) {
 /**
  * Custom CSS/Js loader.
  */
-function block_country_custom_scripts_loader() {
+function rca_block_country_custom_scripts_loader() {
 
 	wp_enqueue_style(
 		'rca-style',
-		trailingslashit( RCA_URL ) . 'assets/css/style.css',
+		trailingslashit( RCA_URL ) . 'assets/css/style.min.css',
 		array(),
 		RCA_VERSION
 	);
 
 	wp_enqueue_script(
 		'rca-custom-script',
-		trailingslashit( RCA_URL ) . 'assets/js/multiselect.js',
+		trailingslashit( RCA_URL ) . 'assets/js/multiselect.min.js',
 		array(),
 		RCA_VERSION,
 		false
 	);
 }
-add_action( 'admin_enqueue_scripts', 'block_country_custom_scripts_loader' );
+add_action( 'admin_enqueue_scripts', 'rca_block_country_custom_scripts_loader' );
 
 /**
  * Callback Function Of Custom Admin Menu.
  */
-function block_country_menu_callback() {
+function rca_block_country_menu_callback() {
 
 	echo sprintf(
 		'<dic class="warp"><h1>%s</h1><p></p></div>',
@@ -131,14 +131,14 @@ function block_country_menu_callback() {
 						<label for="country"> <?php esc_html_e( 'Select Country', 'restrict-country' ); ?> </label>
 					</th>
 					<td>
-						<select id="country" name="country[]" multiple >
+						<select id="country" name="rca_country[]" multiple >
 
 							<?php
 							// listing all Contries in the select box function.
-							$country_code = get_option( 'country' );
+							$country_code = get_option( 'rca_country' );
 
 							// Calling countries_dropdown Function.
-							echo countries_dropdown( $country_code );
+							echo rca_countries_dropdown( $country_code );
 							?>
 
 						</select>
@@ -150,7 +150,7 @@ function block_country_menu_callback() {
 						<label for="page_id"><?php esc_html_e( 'Select Page', 'restrict-country' ); ?></label>
 					</th>
 					<td>
-						<select name='page_id' id="page_id">
+						<select name="rca_page_id" id="page_id">
 							<option default value=""><?php esc_html_e( 'None', 'restrict-country' ); ?></option>
 
 							<?php
@@ -165,7 +165,7 @@ function block_country_menu_callback() {
 
 							if ( ! empty( $all_wp_pages ) ) {
 
-								$restrcted_page_id = get_option( 'page_id' );
+								$restrcted_page_id = get_option( 'rca_page_id' );
 
 								foreach ( $all_wp_pages as $value ) {
 									$post    = get_post( $value );
@@ -193,7 +193,7 @@ function block_country_menu_callback() {
 		</table>
 		<p class="submit">
 			<input id="submitbtn" class="button button-primary" type="submit" />
-		</p>	
+		</p>
 	</form>
 	<script>jQuery('#country').multiselect({columns: 1,placeholder: 'Select Country'});</script>
 	<?php
@@ -202,10 +202,10 @@ function block_country_menu_callback() {
 /**
  * Display Success Notice.
  */
-function restrict_country_success_notice() {
+function rca_block_country_success_notice() {
 	?>
 	<div class="notice notice-success is-dismissible">
-		<p><?php esc_html_e( 'Seetings Saved', 'restrict-country' ); ?></p>
+		<p><?php esc_html_e('Seetings Saved', 'restrict-country' ); ?></p>
 	</div>
 	<?php
 }

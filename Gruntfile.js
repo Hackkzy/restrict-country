@@ -79,8 +79,8 @@ module.exports = function( grunt ) {
 
 		watch: {
 		  scripts: {
-		    files: ['**/*.js', '**/*.css'],
-		    tasks: ['addtextdomain', 'makepot', 'cssmin', 'uglify', 'phpcbf'],
+		    files: ['**/*.js', '**/*.css', '!node_modules/**/*', '**/*.php'],
+		    tasks: ['addtextdomain', 'makepot', 'cssmin', 'uglify', 'phpcbf', 'cssmin'],
 		    options: {
 		      spawn: false,
 		    },
