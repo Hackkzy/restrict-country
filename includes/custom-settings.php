@@ -205,7 +205,7 @@ function rca_block_country_menu_callback() {
 function rca_block_country_success_notice() {
 	?>
 	<div class="notice notice-success is-dismissible">
-		<p><?php esc_html_e('Seetings Saved', 'restrict-country' ); ?></p>
+		<p><?php esc_html_e( 'Seetings Saved', 'restrict-country' ); ?></p>
 	</div>
 	<?php
 }
