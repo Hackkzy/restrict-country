@@ -53,7 +53,7 @@ function rca_setting_page_link( $links ) {
 
 	$settings_link = sprintf(
 		'<a href="%1$s">%2$s</a>',
-		esc_url( admin_url( 'admin.php?page=restrict-country' ) ),
+		esc_url( admin_url( 'admin.php?page=rca-restrict-country' ) ),
 		esc_html__( 'Settings', 'restrict-country' )
 	);
 
