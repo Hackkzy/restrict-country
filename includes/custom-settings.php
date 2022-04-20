@@ -35,12 +35,12 @@ add_action( 'admin_menu', 'rca_block_country_admin_menu' );
  */
 function rca_submit_data() {
 
-		// Get Country From Form.
-		$country = filter_input( INPUT_POST, 'rca_country', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	// Get Country From Form.
+	$country = filter_input( INPUT_POST, 'rca_country', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
-		// Get Page ID From Form.
-		$page_id = filter_input( INPUT_POST, 'rca_page_id', FILTER_SANITIZE_NUMBER_INT );
-		$save    = filter_input( INPUT_POST, 'save', FILTER_SANITIZE_NUMBER_INT );
+	// Get Page ID From Form.
+	$page_id = filter_input( INPUT_POST, 'rca_page_id', FILTER_SANITIZE_NUMBER_INT );
+	$save    = filter_input( INPUT_POST, 'rca_save', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $save ) ) {
 		return;
@@ -187,7 +187,7 @@ function rca_block_country_menu_callback() {
 					</td>
 				</tr>
 				<input type="hidden" name="page" value="block-country">
-				<input type="hidden" name="save" value="1">
+				<input type="hidden" name="rca_save" value="1">
 				<?php wp_nonce_field( 'rca_nonce_action', 'rca_nonce' ); ?>
 			</tbody>
 		</table>
