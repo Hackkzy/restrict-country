@@ -1,5 +1,5 @@
 === Restrict Country Access ===
-Contributors: bhargavbhandari90, hackkzy404
+Contributors: bhargavbhandari90, hackkzy404, biliplugins
 Donate link: https://www.paypal.me/BnB90/10
 Tags: biliplugins, blockcountry, block country
 Requires at least: 4.0
