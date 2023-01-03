@@ -95,6 +95,14 @@ function rca_countries_dropdown( $user_country_code = array() ) {
  */
 function rca_block_country_custom_scripts_loader() {
 
+	wp_enqueue_script(
+		'rca-plugin-script',
+		trailingslashit( RCA_URL ) . 'assets/js/plugin.js',
+		array(),
+		RCA_VERSION,
+		false
+	);
+
 	wp_enqueue_style(
 		'rca-style',
 		trailingslashit( RCA_URL ) . 'assets/css/style.min.css',
@@ -195,7 +203,6 @@ function rca_block_country_menu_callback() {
 			<input id="submitbtn" class="button button-primary" type="submit" />
 		</p>
 	</form>
-	<script>jQuery('#country').multiselect({columns: 1,placeholder: 'Select Country'});</script>
 	<?php
 }
 
@@ -209,3 +216,75 @@ function rca_block_country_success_notice() {
 	</div>
 	<?php
 }
+
+/**
+ * Post settings Metabox.
+ */
+function rca_post_settings() {
+	$screens = array( 'post', 'page' );
+	foreach ( $screens as $screen ) {
+		add_meta_box(
+			'rca_post_settings',
+			'Restrict Country',
+			'rca_post_settings_callback',
+			$screen
+		);
+	}
+}
+add_action( 'add_meta_boxes', 'rca_post_settings' );
+
+/**
+ * Outputs the content of the meta box.
+ *
+ * @param object $post Post.
+ */
+function rca_post_settings_callback( $post ) {
+	wp_nonce_field( 'rca_post_setting_nonce', 'rca_nonce' );
+	$post_id = $post->ID;
+	?>
+	<table class="form-table">
+		<tbody>
+			<tr>
+				<th>
+					<label for="rca_selected_country"> <?php esc_html_e( 'Select Country', 'restrict-country' ); ?> </label>
+				</th>
+				<td>
+					<select id="rca_selected_country" name="rca_selected_country[]" multiple>
+						<?php
+						$selected_country = get_post_meta( $post_id, 'rca_selected_country', true );
+						// Calling countries_dropdown Function.
+						echo rca_countries_dropdown( $selected_country );
+						?>
+					</select>
+					<p class="description" id="tagline-description"> <?php esc_html_e( 'Select country where you want to restrict your site.', 'restrict-country' ); ?> </p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<?php
+}
+
+/**
+ * Saves the custom meta input.
+ *
+ * @param int $post_id Post ID.
+ */
+function rca_save_postdata( $post_id ) {
+	// Checks save status.
+	$is_autosave    = wp_is_post_autosave( $post_id );
+	$is_revision    = wp_is_post_revision( $post_id );
+	$is_valid_nonce = ( isset( $_POST['rca_nonce'] ) && wp_verify_nonce( $_POST['rca_nonce'], 'rca_post_setting_nonce' ) ) ? 'true' : 'false';
+
+	// Exits script depending on save status.
+	if ( $is_autosave || $is_revision || ! $is_valid_nonce ) {
+		return;
+	}
+
+	// Checks for input and sanitizes/saves if needed.
+	if ( isset( $_POST['rca_selected_country'] ) ) {
+		update_post_meta( $post_id, 'rca_selected_country', $_POST['rca_selected_country'] );
+	} else {
+		delete_post_meta( $post_id, 'rca_selected_country' );
+	}
+}
+add_action( 'save_post', 'rca_save_postdata' );

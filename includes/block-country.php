@@ -19,6 +19,7 @@ function rca_block_country() {
 
 	// Get IP Address of user.
 	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP ) : '';
+	$ip = '103.250.164.207';
 
 	if ( empty( $ip ) ) {
 		return;
@@ -72,6 +73,24 @@ function rca_block_country() {
 		// Get Permalink of page_id.
 		$page_url = get_permalink( $page_id );
 
+		if ( ! empty( $current_page_id ) && is_single() ) {
+			$selected_country = ! empty( get_post_meta( $current_page_id, 'rca_selected_country', true ) ) ? get_post_meta( $current_page_id, 'rca_selected_country', true ) : array();
+			if ( ! empty( $selected_country ) && ! empty( $country ) && in_array( $country, $selected_country ) ) {
+				if ( ! empty( $page_id ) ) {
+					if ( $page_id != $current_page_id ) {
+						wp_safe_redirect( $page_url );
+						exit;
+					}
+				} else {
+					echo sprintf(
+						'<h2 style="text-align:center;">%s</h2>',
+						esc_html__( 'Site is Restricted in your Country.', 'restrict-country' )
+					);
+					exit;
+				}
+			}
+		}
+
 		if ( ! empty( $selected_country ) && ! empty( $country ) && in_array( $country, $selected_country ) ) {
 
 			if ( ! empty( $page_id ) && ! empty( $current_page_id ) ) {
@@ -89,10 +108,8 @@ function rca_block_country() {
 					esc_html__( 'Site is Restricted in your Country.', 'restrict-country' )
 				);
 				exit;
-
 			}
 		}
 	}
 }
-
 add_action( 'template_redirect', 'rca_block_country', 9999 );
