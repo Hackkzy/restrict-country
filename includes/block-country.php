@@ -19,7 +19,6 @@ function rca_block_country() {
 
 	// Get IP Address of user.
 	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP ) : '';
-	$ip = '103.250.164.207';
 
 	if ( empty( $ip ) ) {
 		return;
