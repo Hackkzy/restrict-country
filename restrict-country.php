@@ -3,7 +3,7 @@
  * Plugin Name: Restrict Country Access
  * Plugin URI:  https://bhargavb.com/
  * Description: Resrict your site from specific Countries.
- * Version:     1.0.0
+ * Version:     1.0.1
  * Author:      Bili Plugins
  * Text Domain: restrict-country
  * Author URI:  https://biliplugins.com/
@@ -20,7 +20,7 @@ if ( ! defined( 'RCA_VERSION' ) ) {
 	/**
 	 * The version of the plugin.
 	 */
-	define( 'RCA_VERSION', '1.0.0' );
+	define( 'RCA_VERSION', '1.0.1' );
 }
 
 if ( ! defined( 'RCA_PATH' ) ) {
