@@ -95,25 +95,17 @@ function rca_countries_dropdown( $user_country_code = array() ) {
  */
 function rca_block_country_custom_scripts_loader() {
 
-	wp_enqueue_script(
-		'rca-plugin-script',
-		trailingslashit( RCA_URL ) . 'assets/js/plugin.js',
-		array(),
-		RCA_VERSION,
-		false
-	);
-
 	wp_enqueue_style(
-		'rca-style',
-		trailingslashit( RCA_URL ) . 'assets/css/style.min.css',
+		'select2',
+		trailingslashit( RCA_URL ) . 'build/restrict-country.css',
 		array(),
 		RCA_VERSION
 	);
 
 	wp_enqueue_script(
-		'rca-custom-script',
-		trailingslashit( RCA_URL ) . 'assets/js/multiselect.min.js',
-		array(),
+		'rca-plugin-script',
+		trailingslashit( RCA_URL ) . 'build/restrict-country.js',
+		array( 'jquery' ),
 		RCA_VERSION,
 		false
 	);
@@ -139,7 +131,7 @@ function rca_block_country_menu_callback() {
 						<label for="country"> <?php esc_html_e( 'Select Country', 'restrict-country' ); ?> </label>
 					</th>
 					<td>
-						<select id="country" name="rca_country[]" multiple>
+						<select id="country" name="rca_country[]" style="width:50%;max-width:25em;" multiple>
 
 							<?php
 							// listing all Contries in the select box function.
@@ -249,7 +241,7 @@ function rca_post_settings_callback( $post ) {
 					<label for="rca_selected_country"> <?php esc_html_e( 'Select Country', 'restrict-country' ); ?> </label>
 				</th>
 				<td>
-					<select id="rca_selected_country" name="rca_selected_country[]" multiple>
+					<select id="rca_selected_country" name="rca_selected_country[]" style="width:50%;max-width:25em;" multiple>
 						<?php
 						$selected_country = get_post_meta( $post_id, 'rca_selected_country', true );
 						// Calling countries_dropdown Function.
