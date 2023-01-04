@@ -3,7 +3,7 @@ name: PHPCS Linting
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   phpcs:
