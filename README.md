@@ -3,9 +3,9 @@
 - **Donate link:** https://www.paypal.me/BnB90/10 
 - **Tags:** biliplugins, blockcountry, block country 
 - **Requires at least:** 4.0 
-- **Tested up to:** 5.9.2
+- **Tested up to:** 6.1.1
 - **Requires PHP:** 5.6 
-- **Stable tag:** 1.0.1 
+- **Stable tag:** 1.1.0 
 - **License:** GPLv2 or later
 - **License URI:** http://www.gnu.org/licenses/gpl-2.0.html 
 
@@ -33,8 +33,10 @@ This plugin will fulfill the requirement of Restricting WordPress site in select
 
 ## Changelog ##
 
-### 1.0.0 ###
-* Initial release.
-
+### 1.1.0 ###
+* Added Feature to restrict single page for selected country.
+* Minor bug fixes.
 ### 1.0.1 ###
 * Minor fix.
+### 1.0.0 ###
+* Initial release.
