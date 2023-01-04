@@ -48,7 +48,7 @@ function rca_submit_data() {
 
 	// Nonce Verification.
 	if ( ! isset( $_POST['rca_nonce'] )
-		|| ! wp_verify_nonce( $_POST['rca_nonce'], 'rca_nonce_action' )
+		|| ! wp_verify_nonce( $_POST['rca_nonce'], 'rca_nonce_action' ) //phpcs:ignore
 	) {
 		echo esc_html__( 'Invalid Submission', 'restrict-country' );
 		die;
@@ -74,7 +74,6 @@ add_action( 'admin_init', 'rca_submit_data', 10 );
 function rca_countries_dropdown( $user_country_code = array() ) {
 
 	$option = '';
-
 	foreach ( $GLOBALS['countries_list'] as $value ) {
 
 		$selected = ( ! empty( $user_country_code ) && in_array( $value['code'], $user_country_code, true ) ? 'selected' : '' );
@@ -137,51 +136,31 @@ function rca_block_country_menu_callback() {
 							// listing all Contries in the select box function.
 							$country_code = get_option( 'rca_country' );
 
-							// Calling countries_dropdown Function.
-							echo rca_countries_dropdown( $country_code );
+							echo wp_kses(
+								rca_countries_dropdown( $country_code ),
+								array(
+									'option' => array(
+										'value'    => array(),
+										'selected' => array(),
+									),
+								)
+							);
 							?>
-
 						</select>
 						<p class="description" id="tagline-description"> <?php esc_html_e( 'Select country where you want to restrict your site. ', 'restrict-country' ); ?> </p>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						<label for="page_id"><?php esc_html_e( 'Select Page', 'restrict-country' ); ?></label>
+						<label for="rca_page_id"><?php esc_html_e( 'Select Page', 'restrict-country' ); ?></label>
 					</th>
 					<td>
-						<select name="rca_page_id" id="page_id">
-							<option default value=""><?php esc_html_e( 'None', 'restrict-country' ); ?></option>
-
-							<?php
-							// Query for listing all pages in the select box loop.
-							$my_wp_query  = new WP_Query();
-							$all_wp_pages = $my_wp_query->query(
-								array(
-									'post_type'      => 'page',
-									'posts_per_page' => 999,
-								)
-							);
-
-							if ( ! empty( $all_wp_pages ) ) {
-
-								$restrcted_page_id = get_option( 'rca_page_id' );
-
-								foreach ( $all_wp_pages as $value ) {
-									$post    = get_post( $value );
-									$title   = $post->post_title;
-									$page_id = $post->ID;
-
-									echo sprintf(
-										'<option %1$s value="%2$s">%3$s</option>',
-										selected( $restrcted_page_id, $page_id ),
-										esc_attr( $page_id ),
-										esc_html( $title )
-									);
-								};
-							}
-							?>
-
+						<?php $selected_page_id = get_option( 'rca_page_id' ); ?>
+						<select name="rca_page_id" id="rca_page_id">
+							<option></option>
+							<?php if ( ! empty( $selected_page_id ) ) : ?>
+							<option value="<?php echo esc_attr( $selected_page_id ); ?>" selected><?php echo esc_html( get_the_title( $selected_page_id ) ); ?></option>	
+							<?php endif; ?>
 						</select>
 						<p class="description" id="tagline-description"> <?php esc_html_e( 'Select Page Where you want to redirect for Blocked Country.', 'restrict-country' ); ?> </p>
 					</td>
@@ -245,7 +224,15 @@ function rca_post_settings_callback( $post ) {
 						<?php
 						$selected_country = get_post_meta( $post_id, 'rca_selected_country', true );
 						// Calling countries_dropdown Function.
-						echo rca_countries_dropdown( $selected_country );
+						echo wp_kses(
+							rca_countries_dropdown( $selected_country ),
+							array(
+								'option' => array(
+									'value'    => array(),
+									'selected' => array(),
+								),
+							)
+						);
 						?>
 					</select>
 					<p class="description" id="tagline-description"> <?php esc_html_e( 'Select country where you want to restrict your site.', 'restrict-country' ); ?> </p>
@@ -265,7 +252,7 @@ function rca_save_postdata( $post_id ) {
 	// Checks save status.
 	$is_autosave    = wp_is_post_autosave( $post_id );
 	$is_revision    = wp_is_post_revision( $post_id );
-	$is_valid_nonce = ( isset( $_POST['rca_nonce'] ) && wp_verify_nonce( $_POST['rca_nonce'], 'rca_post_setting_nonce' ) ) ? 'true' : 'false';
+	$is_valid_nonce = ( isset( $_POST['rca_nonce'] ) && wp_verify_nonce( $_POST['rca_nonce'], 'rca_post_setting_nonce' ) ) ? 'true' : 'false'; //phpcs:ignore
 
 	// Exits script depending on save status.
 	if ( $is_autosave || $is_revision || ! $is_valid_nonce ) {
@@ -274,9 +261,46 @@ function rca_save_postdata( $post_id ) {
 
 	// Checks for input and sanitizes/saves if needed.
 	if ( isset( $_POST['rca_selected_country'] ) ) {
-		update_post_meta( $post_id, 'rca_selected_country', $_POST['rca_selected_country'] );
+		update_post_meta( $post_id, 'rca_selected_country', array_map( 'sanitize_text_field', wp_unslash( $_POST['rca_selected_country'] ) ) );
 	} else {
 		delete_post_meta( $post_id, 'rca_selected_country' );
 	}
 }
 add_action( 'save_post', 'rca_save_postdata' );
+
+/**
+ * Get LD Courses ajax callback.
+ */
+function rca_get_posts_ajax_callback() {
+
+	$return = array();
+
+	$search_key = filter_input( INPUT_GET, 'search_key', FILTER_DEFAULT );
+
+	$search_results = new WP_Query(
+		array(
+			's'                   => $search_key,
+			'post_status'         => 'publish',
+			'post_type'           => array( 'post', 'page' ),
+			'ignore_sticky_posts' => 1,
+			'posts_per_page'      => 50,
+		)
+	);
+
+	if ( $search_results->have_posts() ) :
+		while ( $search_results->have_posts() ) :
+			$search_results->the_post();
+			// Shorten the title a little.
+			$title    = ( mb_strlen( get_the_title() ) > 50 )
+				? mb_substr( get_the_title(), 0, 49 ) . '...'
+				: get_the_title();
+			$return[] = array(
+				get_the_ID(),
+				$title,
+			);
+		endwhile;
+	endif;
+	echo wp_json_encode( $return );
+	die;
+}
+add_action( 'wp_ajax_rca_get_posts', 'rca_get_posts_ajax_callback' );

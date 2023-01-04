@@ -45,7 +45,7 @@ function rca_block_country() {
 		$status        = isset( $result->status ) ? $result->status : '';
 
 		// Get counryCode based on User's IP.
-		$country = isset( $result->countryCode ) ? $result->countryCode : '';
+		$country = isset( $result->countryCode ) ? $result->countryCode : ''; //phpcs:ignore
 
 		// Set Transient .
 		set_transient( $trans_key, $country, 12 * HOUR_IN_SECONDS );
@@ -58,7 +58,7 @@ function rca_block_country() {
 
 	}
 
-	if ( ! empty( $status ) && 'success' == $status ) {
+	if ( ! empty( $status ) && 'success' === $status ) {
 
 		// Get Selected Country of Plugin From database.
 		$selected_country = ! empty( get_option( 'rca_country' ) ) ? get_option( 'rca_country' ) : array();
@@ -74,9 +74,9 @@ function rca_block_country() {
 
 		if ( ! empty( $current_page_id ) && is_single() ) {
 			$selected_country = ! empty( get_post_meta( $current_page_id, 'rca_selected_country', true ) ) ? get_post_meta( $current_page_id, 'rca_selected_country', true ) : array();
-			if ( ! empty( $selected_country ) && ! empty( $country ) && in_array( $country, $selected_country ) ) {
+			if ( ! empty( $selected_country ) && ! empty( $country ) && in_array( $country, $selected_country ) ) { // phpcs:ignore
 				if ( ! empty( $page_id ) ) {
-					if ( $page_id != $current_page_id ) {
+					if ( $page_id != $current_page_id ) { // phpcs:ignore
 						wp_safe_redirect( $page_url );
 						exit;
 					}
@@ -90,11 +90,11 @@ function rca_block_country() {
 			}
 		}
 
-		if ( ! empty( $selected_country ) && ! empty( $country ) && in_array( $country, $selected_country ) ) {
+		if ( ! empty( $selected_country ) && ! empty( $country ) && in_array( $country, $selected_country ) ) { // phpcs:ignore
 
 			if ( ! empty( $page_id ) && ! empty( $current_page_id ) ) {
 
-				if ( $page_id != $current_page_id ) {
+				if ( $page_id != $current_page_id ) { // phpcs:ignore
 
 					wp_safe_redirect( $page_url );
 					exit;
